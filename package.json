@@ -17,6 +17,8 @@
     "express": "^4.17.1",
     "express-healthcheck": "^0.1.0",
     "helmet": "^3.23.3",
+    "mongodb": "^3.5.9",
+    "mongoose": "^5.9.23",
     "winston": "^3.3.3"
   },
   "devDependencies": {
