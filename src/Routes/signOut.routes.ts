@@ -21,8 +21,9 @@ export default ({ app } : RoutesInput) => {
                         passHistoryId:req.body.passHistoryId,
                         status:req.body.status
                 });
-            
-                         return res.send({ passHistoryOut });
+                  
+                         return res.send({ passHistoryOut,name:passHistory.name,
+                            surname:passHistory.surname });
                }
                else {
                     return res.send({ status:"not found passHistoryId" });
