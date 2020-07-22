@@ -103,4 +103,17 @@ export default ({ app } : RoutesInput) => {
                     return res.send({e})
                 }
         })
- }
+
+
+        app.get('/api/passHistory/list',async(req,res) => {
+            try {
+                const passHistory = await passHistoryController.getListPassHistory();
+              
+                    return res.send({ passHistory});
+                }
+                catch (e) {
+                    return res.send({e})
+                }
+            })
+
+    }

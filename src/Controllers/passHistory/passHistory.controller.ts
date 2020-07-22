@@ -295,6 +295,17 @@ async function getSizeSignOutPrivate () {
           });
        }
 
+
+       async function getListPassHistory(){
+          return passHistory.find({}).sort({created:'-1'})
+            .then(data => {
+              return data;
+            })
+            .catch((error: Error) => {
+              throw error;
+            });
+         }
+
        
     
   
@@ -310,5 +321,6 @@ async function getSizeSignOutPrivate () {
     getSizePrivate,
     updatePassHistorySignOut,
     getSizeSignOut,
-    getSizeSignOutPrivate
+    getSizeSignOutPrivate,
+    getListPassHistory
   };
