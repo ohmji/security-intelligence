@@ -1,7 +1,6 @@
 import mongoose, { Schema,Document } from 'mongoose';
-import { Code } from 'mongodb';
 
-export interface IprivatePersons extends Document {
+export interface IBlackList extends Document {
     identification : String;
     name : String;
     surname : String;
@@ -20,14 +19,14 @@ export interface IprivatePersons extends Document {
     plate:String;
     province:String;
     imageCar:[String];
-    type:Boolean;
-    role:Number
+   
+
 
 }
 
 
 
-const privatePersonsSchema : Schema = new Schema({
+const BlackListSchema : Schema = new Schema({
     identification :{
         type : String,
         unique:true,
@@ -86,16 +85,9 @@ const privatePersonsSchema : Schema = new Schema({
     imageCar :{
         type:[String]
     },
-    type:{
-        type: Boolean,
-        required:true
-      },
-      role:{
-           type:Number
-      }
-  
+ 
 
 });
 
-export default mongoose.model<IprivatePersons>('privatePersons',privatePersonsSchema);
+export default mongoose.model<IBlackList>('BlackList',BlackListSchema);
 

@@ -1,9 +1,9 @@
 import { RoutesInput } from '../types/route';
-import  privatePersonController from '../Controllers/privatePerson/privatePerson.controller';
+import  blackListController from '../Controllers/BlackList/blacklist';
 import  hertaController from "../Controllers/HertaController/herta.controller"
 export default ({ app } : RoutesInput) => {
 
-        app.post('/api/privatePerson', async(req,res) => {
+        app.post('/api/blackList', async(req,res) => {
         try {
             const enrollUser = await hertaController.EnrollUserServer({
                 Code:req.body.identification,
@@ -12,10 +12,8 @@ export default ({ app } : RoutesInput) => {
                 images:req.body.faceImage
             })
             if(enrollUser.Check == "True") {
-            const privatePerson = await privatePersonController.CreatePrivatePersons({
+            const blackList = await blackListController.CreateblackList({
                 identification:req.body.identification,
-                type:req.body.type,
-                role:req.body.role,
                 name:req.body.name,
                 surname:req.body.surname,
                 name_thai:req.body.name_thai,
@@ -35,18 +33,18 @@ export default ({ app } : RoutesInput) => {
                 imageCar:req.body.imageCar
 
             });
-            const typeHistory = {
-                _id:privatePerson._id,
-                name:privatePerson.name,
-                surname:privatePerson.surname,
-                name_thai:privatePerson.name_thai,
-                surname_thai:privatePerson.surname_thai,
-                plate:privatePerson.plate,
-                province:privatePerson.province,
+            const passHistory = {
+                _id:blackList._id,
+                name:blackList.name,
+                surname:blackList.surname,
+                name_thai:blackList.name_thai,
+                surname_thai:blackList.surname_thai,
+                plate:blackList.plate,
+                province:blackList.province,
                 temperature:req.body.temperature
             }     
 
-                return res.send({ typeHistory });
+                return res.send({ passHistory });
             }
             else {
                     return res.send({status:"add face Image fail" });
@@ -58,25 +56,23 @@ export default ({ app } : RoutesInput) => {
             
         })
 
-    app.get('/api/privatePerson',async(req,res) => {
+    app.get('/api/blackList',async(req,res) => {
         try {
-            const privatePerson = await privatePersonController.getPrivatePersonsbyIdt({
+            const blackList = await blackListController.getblackListbyIdt({
                 identification:req.body.identification
               });
           
-                return res.send({ privatePerson});
+                return res.send({ blackList});
             }
             catch (e) {
                 return res.send({e})
             }
         })
 
-        app.put('/api/privatePerson',async(req,res) => {
+        app.put('/api/blackList',async(req,res) => {
             try {
-                const privatePerson = await privatePersonController.updatePrivatePerson({
+                const blackList = await blackListController.updateblackList({
                     identification:req.body.identification,
-                    type:req.body.type,
-                    role:req.body.role,
                     name:req.body.name,
                     surname:req.body.surname,
                     name_thai:req.body.name_thai,
@@ -96,25 +92,25 @@ export default ({ app } : RoutesInput) => {
                     imageCar:req.body.imageCar
                   });
               
-                    return res.send({privatePerson});
+                    return res.send({blackList});
                 }
                 catch (e) {
                     return res.send({e})
                 }
         })
 
-    app.delete('/api/privatePerson',async(req,res) => {
+    app.delete('/api/blackList',async(req,res) => {
             try {
                  const deleteUser = await hertaController.DeleteUserServer({
                         Code:req.body.identification
                     })
                 
-                 const privatePerson = await privatePersonController.deletePrivatePerson({
+                 const blackList = await blackListController.deleteblackList({
                     identification:req.body.identification
                   });
                     
                     if(deleteUser.Check ==="True") {
-                        return res.send({privatePerson});
+                        return res.send({blackList});
                     }
                     else {
                         return res.send({status:"delete face image not complete"})

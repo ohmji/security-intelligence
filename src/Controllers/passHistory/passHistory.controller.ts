@@ -1,4 +1,4 @@
-import passHistory,{ IpassHistory } from '../../Models/passHistory/passHistory.model';
+import passHistory,{ IpassHistory,OpassHistory } from '../../Models/passHistory/passHistory.model';
 
 interface ICreateUserInput {
   created:IpassHistory['created']
@@ -21,8 +21,12 @@ interface ICreateUserInput {
   province:IpassHistory ['province'];
   imageCar:IpassHistory ['imageCar'];
   temperature:IpassHistory['temperature'];
-  note:IpassHistory['note']
-  
+  note:IpassHistory['note'];
+  type:IpassHistory["type"];
+  role:IpassHistory["role"];
+  status:IpassHistory["status"];
+  signOutTime:IpassHistory["signOutTime"];
+
 }
   interface getUserInput {
     identification : IpassHistory['identification'];
@@ -34,11 +38,22 @@ interface ICreateUserInput {
 
   interface getPlateInput {
     plate : IpassHistory['plate'];
+    signOutTime :OpassHistory['signOutTime'];
+    status:OpassHistory["status"];
   }
   
-  interface emptyNote {
-    note : IpassHistory['note'];
+  interface getSignOutInput {
+    _id : OpassHistory['_id'];
+    signOutTime :OpassHistory['signOutTime'];
+    status:OpassHistory["status"];
   }
+
+  interface getSignOutInputIdt {
+    identification :IpassHistory['identification'];
+    signOutTime :OpassHistory['signOutTime'];
+    status:OpassHistory["status"];
+  }
+  
 
 async function CreatepassHistory({
   created,
@@ -57,11 +72,15 @@ async function CreatepassHistory({
   image_picture,
   note,
   temperature,
+  role,
+  type,
+  status,
   code,
   faceImage,
   plate,
   province,
-  imageCar
+  imageCar,
+  signOutTime
 
   }: ICreateUserInput): Promise<IpassHistory> {
     return passHistory.create({
@@ -80,13 +99,16 @@ async function CreatepassHistory({
       birthDate,
       plate,
       province,
+      signOutTime,
       note,
       temperature,
+      role,
+      type,
+      status,
       image_picture,
       code,
       faceImage,
-      imageCar,
-    
+      imageCar
   
     })
       .then((data: IpassHistory) => {
@@ -97,33 +119,8 @@ async function CreatepassHistory({
       });
   }
 
-  async function getpassHistoryId({_id}:getIdInput) {
-    return passHistory.findById({_id}).then((
-    result=>{return result}))
-    .catch((e:Error)=>{
-      throw e;
-    })
-
-
-  }
-
   
 
-  async function getpassHistorybyIdt({identification}:getUserInput) {
-    return passHistory.findOne({identification}).sort({created:'-1'}).then((
-    result=>{return result}))
-    .catch((e:Error)=>{
-      throw e;
-    })
-  } 
-
-  async function getpassHistorybyPlate({plate}:getPlateInput) {
-    return passHistory.findOne({plate}).sort({created:'-1'}).then((
-    result=>{return result}))
-    .catch((e:Error)=>{
-      throw e;
-    })
-  }
   async function getSize () {
     return passHistory.countDocuments({}).then((
     result=>{return result}))
@@ -134,6 +131,21 @@ async function CreatepassHistory({
 
   async function getSizePrivate () {
     return passHistory.countDocuments({ note: { $exists: true, $not: {$size: 0} }}).then((
+    result=>{return result}))
+    .catch((e:Error)=>{
+      throw e;
+    })
+  }
+
+  async function getSizeSignOut () {
+    return passHistory.countDocuments({status:true,role:0}).then((
+    result=>{return result}))
+    .catch((e:Error)=>{
+      throw e;
+    })
+  }
+async function getSizeSignOutPrivate () {
+    return passHistory.countDocuments({status:true,role:1}).then((
     result=>{return result}))
     .catch((e:Error)=>{
       throw e;
@@ -164,24 +176,44 @@ async function CreatepassHistory({
     title_eng,
     gender,
     birthDate,
-    image_picture
+    image_picture,
+    note,
+    temperature,
+    role,
+    type,
+    status,
+    code,
+    faceImage,
+    plate,
+    province,
+    imageCar
   
     }: ICreateUserInput){
       return passHistory.findOneAndUpdate({identification},{
         created,
-        identification,
-        name,
-        surname,
-        name_thai,
-        surname_thai,
-        address,
-        date_issue,
-        date_exprire,
-        title,
-        title_eng,
-        gender,
-        birthDate,
-        image_picture
+      identification,
+      name,
+      surname,
+      name_thai,
+      surname_thai,
+      address,
+      date_issue,
+      date_exprire,
+      title,
+      title_eng,
+      gender,
+      birthDate,
+      plate,
+      province,
+      note,
+      temperature,
+      role,
+      type,
+      status,
+      image_picture,
+      code,
+      faceImage,
+      imageCar,
     
       })
         .then(data => {
@@ -193,6 +225,77 @@ async function CreatepassHistory({
     }
 
 
+    async function updatePassHistorySignOut({
+       status,
+      _id,
+      signOutTime
+
+      }: getSignOutInput){
+        return passHistory.findByIdAndUpdate({_id},{
+         status,
+         signOutTime
+        },{new:true})
+          .then(data => {
+            return data;
+          })
+          .catch((error: Error) => {
+            throw error;
+          });
+  
+        }
+
+      async function getpassHistoryId({_id}:getIdInput) {
+        return passHistory.findById({_id}).then((
+        result=>{return result}))
+        .catch((e:Error)=>{
+          throw e;
+        })
+    
+    
+      }
+    
+      // ({identification}:getUserInput) {
+      //   return passHistory.findOne({identification}).sort({created:'-1'}).then((
+      //   result=>{return result}))
+      //   .catch((e:Error)=>{
+      //     throw e;
+      //   })
+      async function getpassHistorybyIdt
+      ({
+        status,
+        identification,
+        signOutTime
+ 
+       }: getSignOutInputIdt){
+         return passHistory.findOneAndUpdate({identification},{
+          status,
+          signOutTime
+         },{new:true}).sort({created:'-1'})
+           .then(data => {
+             return data;
+           })
+           .catch((error: Error) => {
+             throw error;
+           });
+        }
+
+      async function getpassHistorybyPlate({plate,
+      status,
+      signOutTime
+      }:getPlateInput){
+        return passHistory.findOneAndUpdate({plate},{
+         status,
+         signOutTime
+        },{new:true}).sort({created:'-1'})
+          .then(data => {
+            return data;
+          })
+          .catch((error: Error) => {
+            throw error;
+          });
+       }
+
+       
     
   
 
@@ -204,5 +307,8 @@ async function CreatepassHistory({
     getpassHistoryId,
     getpassHistorybyPlate,
     getSize,
-    getSizePrivate
+    getSizePrivate,
+    updatePassHistorySignOut,
+    getSizeSignOut,
+    getSizeSignOutPrivate
   };

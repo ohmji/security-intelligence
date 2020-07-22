@@ -10,20 +10,22 @@ export default ({ app } : RoutesInput) => {
         try {
             try {
                 
-                const passHistory = await passHistoryController.getpassHistoryId({
-                      _id:req.body.passHistoryId
+                const passHistory = await passHistoryController.updatePassHistorySignOut({
+                      _id:req.body.passHistoryId,
+                      status:true,
+                      signOutTime:new Date()
                   });
 
-                  if(passHistory  != null) {
-                  const passHistoryOut = await passHistoryOutController.CreatepassHistoryOut({
-                        created:new Date(),
-                        signInTime:passHistory.created,
-                        passHistoryId:req.body.passHistoryId,
-                        status:req.body.status
-                });
-                  
-                         return res.send({ passHistoryOut,name:passHistory.name,
-                            surname:passHistory.surname });
+                     if(passHistory != null) {
+                         return res.send({
+                            name:passHistory.name,
+                            surname:passHistory.surname ,
+                            passHistoryOut:{
+                            signInTime:passHistory.created,
+                            status:passHistory.status,
+                            signOutTime:passHistory.signOutTime,
+                            }
+                        });
                }
                else {
                     return res.send({ status:"not found passHistoryId" });
@@ -44,21 +46,24 @@ export default ({ app } : RoutesInput) => {
                     try {
                         
                         const passHistory = await passHistoryController.getpassHistorybyIdt({
-                            identification:req.body.identification
+                              identification:req.body.identification,
+                              status:true,
+                              signOutTime:new Date()
                           });
         
-                          if(passHistory  != null) {
-                          const passHistoryOut = await passHistoryOutController.CreatepassHistoryOut({
-                                created:new Date(),
-                                signInTime:passHistory.created,
-                                passHistoryId:passHistory._id,
-                                status:req.body.status
-                        });
-                    
-                                 return res.send({ passHistoryOut });
+                             if(passHistory != null) {
+                                 return res.send({
+                                    name:passHistory.name,
+                                    surname:passHistory.surname ,
+                                    passHistoryOut:{
+                                    signInTime:passHistory.created,
+                                    status:passHistory.status,
+                                    signOutTime:passHistory.signOutTime,
+                                    }
+                                });
                        }
                        else {
-                            return res.send({ status:"not found identification" });
+                            return res.send({ status:"not found passHistoryId" });
                        }
                  }
                         catch (e) {
@@ -77,18 +82,21 @@ export default ({ app } : RoutesInput) => {
                             try {
                                 
                                 const passHistory = await passHistoryController.getpassHistorybyPlate({
-                                    plate:req.body.plate
+                                    plate:req.body.plate,
+                                      status:true,
+                                      signOutTime:new Date()
                                   });
                 
-                                  if(passHistory  != null) {
-                                  const passHistoryOut = await passHistoryOutController.CreatepassHistoryOut({
-                                        created:new Date(),
-                                        signInTime:passHistory.created,
-                                        passHistoryId:passHistory._id,
-                                        status:req.body.status
-                                });
-                            
-                                         return res.send({ passHistoryOut });
+                                     if(passHistory != null) {
+                                         return res.send({
+                                            name:passHistory.name,
+                                            surname:passHistory.surname ,
+                                            passHistoryOut:{
+                                            signInTime:passHistory.created,
+                                            status:passHistory.status,
+                                            signOutTime:passHistory.signOutTime,
+                                            }
+                                        });
                                }
                                else {
                                     return res.send({ status:"not found passHistoryId" });

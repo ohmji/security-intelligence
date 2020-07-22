@@ -19,6 +19,8 @@ interface ICreateUserInput {
   plate:IprivatePersons['plate'];
   province:IprivatePersons['province'];
   imageCar:IprivatePersons['imageCar'];
+  type:IprivatePersons['type'];
+  role:IprivatePersons['role'];
 }
 interface getUserInput {
   identification : IprivatePersons['identification'];
@@ -34,6 +36,8 @@ interface getCodeInput {
 
 async function CreatePrivatePersons({
   identification,
+  type,
+  role,
   name,
   surname,
   name_thai,
@@ -55,6 +59,8 @@ async function CreatePrivatePersons({
   }: ICreateUserInput): Promise<IprivatePersons> {
     return privatePersons.create({
       identification,
+      type,
+      role,
       name,
       surname,
       name_thai,
@@ -71,7 +77,8 @@ async function CreatePrivatePersons({
       image_picture,
       code,
       faceImage,
-      imageCar
+      imageCar,
+     
       
   
     })
@@ -124,6 +131,8 @@ async function CreatePrivatePersons({
 
   async function updatePrivatePerson({
     identification,
+    type,
+    role,
     name,
     surname,
     name_thai,
@@ -147,6 +156,8 @@ async function CreatePrivatePersons({
     }: ICreateUserInput){
       return privatePersons.findOneAndUpdate({identification},{
         identification,
+        type,
+        role,
         name,
         surname,
         name_thai,

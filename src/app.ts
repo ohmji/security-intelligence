@@ -11,7 +11,7 @@ import passHistory from "./Routes/passHistory.routes"
 import signIn  from "./Routes/signIn.routes"
 import signOut from "./Routes/signOut.routes"
 import dashBoard from "./Routes/dashBoard.routes"
- 
+import blackListRoutes from "./Routes/blackList.routes"
 
 
 const app: Application = express()
@@ -33,6 +33,7 @@ passHistory({app})
 signIn({app})
 signOut({app})
 dashBoard({app})
+blackListRoutes({app})
 
 app.listen(process.env.PORT, () => {
   // logger.info(`API Listening on port: ${process.env.NODE_ENV} as ${process.env.NODE_ENV}`)

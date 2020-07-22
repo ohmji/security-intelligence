@@ -22,9 +22,15 @@ export interface IpassHistory extends Document {
     province:String;
     imageCar:[String];
     temperature:String;
-    
+    type:Boolean;
+    role:Number;
+    status:Boolean;
+    signOutTime:Date
 
-
+}
+export interface OpassHistory extends Document {
+    signOutTime:Date
+    status:Boolean
 }
 
 
@@ -108,6 +114,21 @@ const passHistorySchema : Schema = new Schema({
             type:[String],
             default:[]
         },
+        type : {
+            type:Boolean
+        },
+        role : {
+            type:Number 
+        },
+        signOutTime:{
+            type:Date,
+            default:null
+        },
+        status:{
+             type :Boolean,
+             default:false,
+             required:true
+        }
         
 
 

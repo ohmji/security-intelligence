@@ -8,7 +8,7 @@ export default ({ app } : RoutesInput) => {
             const passHistory = await passHistoryController.CreatepassHistory({
                 created:new Date(),
                     identification:req.body.identification,
-                 name:req.body.name,
+                                name:req.body.name,
                                 surname:req.body.surname,
                                 name_thai:req.body.name_thai,
                                 surname_thai:req.body.surname_thai,
@@ -26,7 +26,11 @@ export default ({ app } : RoutesInput) => {
                                 province:req.body.province,
                                 imageCar:req.body.imageCar,
                                 note:req.body.note,
-                                temperature:req.body.temperature
+                                temperature:req.body.temperature,
+                                role:req.body.role,
+                                type:req.body.type,
+                                status:req.body.status,
+                                signOutTime: new Date()
             });
         
                 return res.send({ passHistory });
@@ -36,18 +40,7 @@ export default ({ app } : RoutesInput) => {
             }
         })
 
-    app.get('/api/passHistory',async(req,res) => {
-        try {
-            const passHistory = await passHistoryController.getpassHistorybyIdt({
-                identification:req.body.identification
-              });
-          
-                return res.send({ passHistory});
-            }
-            catch (e) {
-                return res.send({e})
-            }
-        })
+ 
 
         app.get('/api/passHistory/size',async(req,res) => {
             try {
@@ -60,21 +53,6 @@ export default ({ app } : RoutesInput) => {
                 }
             })
 
-    
-        app.get('/api/passHistory/plate',async(req,res) => {
-            try {
-                const passHistory = await passHistoryController.getpassHistorybyPlate({
-                    plate:req.body.plate
-                  });
-              
-                    return res.send({ passHistory});
-                }
-                catch (e) {
-                    return res.send({e})
-                }
-            })
-
-    
 
         app.put('/api/passHistory',async(req,res) => {
             try {
@@ -99,7 +77,11 @@ export default ({ app } : RoutesInput) => {
                                 province:req.body.province,
                                 imageCar:req.body.imageCar,
                                 note:req.body.note,
-                                temperature:req.body.temperature
+                                temperature:req.body.temperature,
+                                role:req.body.role,
+                                type:req.body.type,
+                                status:req.body.status,
+                                signOutTime: new Date()
                   });
               
                     return res.send({passHistory});

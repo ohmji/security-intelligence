@@ -1,7 +1,7 @@
 import { RoutesInput } from '../types/route';
 import  passHistoryController from '../Controllers/passHistory/passHistory.controller';
 import  privatePersonController from '../Controllers/privatePerson/privatePerson.controller';
-
+import  hertaController from "../Controllers/HertaController/herta.controller"
 export default ({ app } : RoutesInput) => {
 
         
@@ -21,7 +21,7 @@ export default ({ app } : RoutesInput) => {
 
                 //   console.log(privatePerson)
                   if(privatePerson != null) {
-                  const passHistory = await passHistoryController.CreatepassHistory({
+                                  const passHistory = await passHistoryController.CreatepassHistory({
                                 created:new Date(),
                                 identification:privatePerson.identification,
                                 name:privatePerson.name,
@@ -42,7 +42,12 @@ export default ({ app } : RoutesInput) => {
                                 province:privatePerson.province,
                                 imageCar:privatePerson.imageCar,
                                 note:req.body.note,
-                                temperature:req.body.temperature
+                                temperature:req.body.temperature,
+                                role:privatePerson.role,
+                                type:privatePerson.type,
+                                status:false,
+                                signOutTime: new Date()
+                                
                 });
             
                          return res.send({ passHistory });
@@ -93,7 +98,11 @@ export default ({ app } : RoutesInput) => {
                                         province:privatePerson.province,
                                         imageCar:privatePerson.imageCar,
                                         note:req.body.note,
-                                        temperature:req.body.temperature
+                                        temperature:req.body.temperature,
+                                        role:privatePerson.role,
+                                        type:privatePerson.type,
+                                        status:req.body.status,
+                                        signOutTime: new Date()
                         });
                     
                                  return res.send({ passHistory });
@@ -144,7 +153,11 @@ export default ({ app } : RoutesInput) => {
                                                 province:privatePerson.province,
                                                 imageCar:privatePerson.imageCar,
                                                 note:req.body.note,
-                                                temperature:req.body.temperature
+                                                temperature:req.body.temperature,
+                                                role:privatePerson.role,
+                                                type:privatePerson.type,
+                                                status:req.body.status,
+                                                signOutTime: new Date()
                                 });
                             
                                          return res.send({ passHistory });
@@ -169,7 +182,25 @@ export default ({ app } : RoutesInput) => {
 
             app.post('/api/signIn/publicPerson', async(req,res) => {
                     try {
-                            const data = await passHistoryController.CreatepassHistory({
+                          
+                        const code  = await hertaController.IdentifySubjectServer({
+                            images:req.body.faceImage
+                        })
+
+                        const privatePerson = await privatePersonController.getPrivatePersonsbyIdt({
+                            identification:req.body.identification
+                          });
+                          const privatePersonPlate = await privatePersonController.getPrivatePersonsbyPlate({
+                            plate:req.body.plate
+                          });
+                          const privatePersonCode = await privatePersonController.getPrivatePersonsbyCode({
+                            code:code[0].Key
+                          });
+                        //   console.log(code[0])
+                        //   console.log(privatePerson?.type,privatePersonCode?.type,privatePersonPlate?.type)
+                        if (privatePerson == null && privatePersonCode == null && privatePersonPlate == null ) { 
+                        
+                                const data = await passHistoryController.CreatepassHistory({
                                 created:new Date(),
                                 identification:req.body.identification,
                                 name:req.body.name,
@@ -190,7 +221,12 @@ export default ({ app } : RoutesInput) => {
                                 province:req.body.province,
                                 imageCar:req.body.imageCar,
                                 note:req.body.note,
-                                temperature:req.body.temperature
+                                temperature:req.body.temperature,
+                                role:0,
+                                type:false,
+                                status:false,
+                                signOutTime: new Date()
+                            
                             });
                              const passHistory = {
                                 _id:data._id,
@@ -201,12 +237,24 @@ export default ({ app } : RoutesInput) => {
                                 note:data.note,
                                 plate:data.plate,
                                 province:data.province,
-                                temperature:data.temperature
+                                temperature:data.temperature,
+                                role:data.role,
+                                type:data.type,
+                                status:data.status,
                             } 
                     
                                  return res.send({ passHistory });
-                       
-                     }
+                        }
+                        else {
+                          if(privatePerson?.type  || privatePersonPlate?.type || privatePersonCode?.type) {
+                              return res.send({status:"blacklist person"})
+                          }
+                          else {
+                              return res.send({status:"white list person"})
+                          }
+                        }
+                     
+                       }
                         catch (e) {
                                  return res.send({e})
                             }

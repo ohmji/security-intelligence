@@ -20,7 +20,9 @@ export interface ICreateHetaInput {
 export interface IGetHetaInput {
       Images:[]
    }
-
+   export interface IidentifyInput {
+    images:String;
+ }
 
 
     async function EnrollUserServer({
@@ -85,10 +87,11 @@ export interface IGetHetaInput {
 
     async function IdentifySubjectServer({
         images
-        }: ICreateUserInput) {
+        }: IidentifyInput) {
           return axios.post(process.env.HERTA_URL+"/IdentifySubject"
           ,{
-              images:images      
+              images:images   ,
+              "maxNumberOfCandidates":"10"   
            }
           )
           .then(response => {
