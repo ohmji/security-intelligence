@@ -1,4 +1,4 @@
-import passHistory,{ IpassHistory,OpassHistory } from '../../Models/passHistory/passHistory.model';
+import passHistory,{ IpassHistory,OpassHistory,listHistory } from '../../Models/passHistory/passHistory.model';
 
 interface ICreateUserInput {
   created:IpassHistory['created']
@@ -53,6 +53,18 @@ interface ICreateUserInput {
     signOutTime :OpassHistory['signOutTime'];
     status:OpassHistory["status"];
   }
+  
+  interface getListHistory {
+    page:listHistory['page'];
+    pageSize :listHistory['pageSize'];
+    dateStart:listHistory["dateStart"];
+    dateEnd:listHistory["dateEnd"];
+  }
+
+  // page:Number,
+  //   pageSize:Number,
+  //   dataStart : Date,
+  //   dataEnd:Date    
   
 
 async function CreatepassHistory({
@@ -296,9 +308,17 @@ async function getSizeSignOutPrivate () {
        }
 
 
-       async function getListPassHistory(){
-          return passHistory.find({}).sort({created:'-1'})
+       async function getListPassHistory({
+         page,
+         pageSize,
+         dateStart,
+         dateEnd
+       }:getListHistory){
+
+        console.log(page,pageSize,dateStart,dateEnd)
+          return passHistory.find({ created: { $gte:dateStart, $lte:dateEnd } }).sort({created:'-1'})
             .then(data => {
+              console.log(data)
               return data;
             })
             .catch((error: Error) => {

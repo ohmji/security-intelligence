@@ -1,8 +1,10 @@
 import { RoutesInput } from '../types/route';
 import  passHistoryController from '../Controllers/passHistory/passHistory.controller';
+import { type } from 'os';
 
 export default ({ app } : RoutesInput) => {
 
+        
         app.post('/api/passHistory', async(req,res) => {
         try {
             const passHistory = await passHistoryController.CreatepassHistory({
@@ -107,9 +109,15 @@ export default ({ app } : RoutesInput) => {
 
         app.get('/api/passHistory/list',async(req,res) => {
             try {
-                const passHistory = await passHistoryController.getListPassHistory();
+                // console.log(req.query)
+                const passHistory = await passHistoryController.getListPassHistory({
+                    page:req.query.page as any,
+                    pageSize:req.query.pageSize as any,
+                    dateStart:req.query.dateStart as any,
+                    dateEnd:req.query.dateEnd as any,
+                });
               
-                    return res.send({ passHistory});
+                    return res.send({passHistory});
                 }
                 catch (e) {
                     return res.send({e})

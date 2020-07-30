@@ -33,6 +33,14 @@ export interface OpassHistory extends Document {
     status:Boolean
 }
 
+export interface listHistory extends Document {
+    
+    page:Number,
+    pageSize:Number,
+    dateStart : Date,
+    dateEnd:Date    
+}
+
 
 const passHistorySchema : Schema = new Schema({
     created: { type: Date, default: Date.now 
