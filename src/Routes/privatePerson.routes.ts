@@ -58,6 +58,18 @@ export default ({ app } : RoutesInput) => {
             
         })
 
+
+        app.get('/api/privatePerson/all',async(req,res) => {
+            try {
+                const privatePerson = await privatePersonController.getPrivatePersonsAll();
+              
+                    return res.send({ privatePerson});
+                }
+                catch (e) {
+                    return res.send({e})
+                }
+            })
+
     app.get('/api/privatePerson',async(req,res) => {
         try {
             const privatePerson = await privatePersonController.getPrivatePersonsbyIdt({
@@ -104,12 +116,13 @@ export default ({ app } : RoutesInput) => {
         })
 
     app.delete('/api/privatePerson',async(req,res) => {
-            try {
+                // console.log(req.body)
+                try {
                  const deleteUser = await hertaController.DeleteUserServer({
                         Code:req.body.identification
                     })
-                
-                 const privatePerson = await privatePersonController.deletePrivatePerson({
+                if(deleteUser.Check ==="True")
+                {  const privatePerson = await privatePersonController.deletePrivatePerson({
                     identification:req.body.identification
                   });
                     
@@ -119,7 +132,10 @@ export default ({ app } : RoutesInput) => {
                     else {
                         return res.send({status:"delete face image not complete"})
                     }
-                    
+                }
+                else {
+                    return res.send({status:"delete face image not complete status false "})
+                }
                 }
                 catch (e) {
                     return res.send({e})

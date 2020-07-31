@@ -185,11 +185,21 @@ async function CreatePrivatePersons({
         });
     }
 
+    async function getPrivatePersonsAll() {
+      return privatePersons.find().then((
+      result=>{return result}))
+      .catch((e:Error)=>{
+        throw e;
+      })
+  
+    }
+
   export default {
     CreatePrivatePersons,
     getPrivatePersonsbyIdt,
     deletePrivatePerson,
     updatePrivatePerson,
     getPrivatePersonsbyCode,
-    getPrivatePersonsbyPlate
+    getPrivatePersonsbyPlate,
+    getPrivatePersonsAll
   };
